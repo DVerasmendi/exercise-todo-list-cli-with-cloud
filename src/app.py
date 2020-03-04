@@ -1,5 +1,7 @@
 import json, requests
 todos = []
+url = 'https://assets.breatheco.de/apis/fake/todos/user/'
+user='dverasmendi'
 
 def get_todos():
     global todos
@@ -7,22 +9,38 @@ def get_todos():
 
 def add_one_task(title):
     # your code here
+    global todos
+    data= {
+        "label":title,
+        "done": False
+    }
+    todos.append(data)
+    return(todos)
     pass
-
+1
 def print_list():
     # your code here
+    y=1
+    for x in todos:
+        print(str(y),x)   
+        y=y+1
     pass
 
 def delete_task(number_to_delete):
     # your code here
+    number_to_delete=int(number_to_delete)
+    number_to_delete=number_to_delete-1
+    todos.pop(number_to_delete)
+    return todos
     pass
 
 def initialize_todos():
     global todos
-    r = requests.get('https://assets.breatheco.de/apis/fake/todos/user/alesanchezr') 
+    header = {'Content-Type':'application/json'}
+    r = requests.get('https://assets.breatheco.de/apis/fake/todos/user/dverasmendi') 
     if(r.status_code == 404):
         print("No previous todos found, starting a new todolist")
-        r = requests.post(url = 'https://assets.breatheco.de/apis/fake/todos/user/alesanchezr', data = []) 
+        r = requests.post(url = 'https://assets.breatheco.de/apis/fake/todos/user/dverasmendi',headers=header , data = json.dumps([])) 
         if r.status_code == 200:
             print("Tasks initialized successfully")
     else:
@@ -32,10 +50,20 @@ def initialize_todos():
     
 def save_todos():
     # your code here
-    pass
+    header = {'Content-Type':'application/json'}
+    req = requests.put(url+user, headers=header, data=json.dumps(todos))
+    print('Tarea cargada exitosamente')
+    print(req)
 
 def load_todos():
     # your code here
+    header = {'Content-Type':'application/json'}
+    req = requests.get(url+user, headers=header)
+
+    if req.status_code == 200:
+        print(req.json())
+    else:
+        print(req.json())
     pass
     
 # Below this code will only run if the entry file running was app.py
